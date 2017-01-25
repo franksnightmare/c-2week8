@@ -1,0 +1,32 @@
+Q: Why is the scope resolution operator required when calling max()?
+A: Because max is defined in the global namespace.
+---------------------------------------------------------------------
+Q: When compiling this function the compiler complains with a message like:
+			 max.cc:13: error: no matching function for call to 'max(double, int)'  
+	 Why doesn't the compiler generate a max(double, double) function in this case? 
+A: The compiler first sees a double and decides that the typename Type must be double.
+	 The compiler will not promote the int to a double by itself, because it checks if the int is a double,
+	 which it isn't.
+----------------------------------------------------------------------
+Q: Assume we add a function 
+			 double max(double const &left, double const &right)
+to the source. Explain why this solves the problem.
+A: The compiler does not have to check if both values are the same 
+	 type(i.e. double in the previous question), so it can convert 
+	 the int into a double. 
+-----------------------------------------------------------------------
+Q: Assume we would then call ::max('a', 12). Which max() function is then used and why?
+A: It will use the first one, the template. Because 'a' is a char and not a double.
+----------------------------------------------------------------------
+Q: Remove the additional max function. Without using casts or otherwise 
+	 changing the argument list of the function call max(3.5, 4), 
+	 how can we get the compiler to compile the source properly?
+A: Use this line: cout << ::max<double>(3.5, 4) << endl;
+   See main.cc
+--------------------------------------------------------------------------
+Q: Specify a general characteristic of the answer to the previous question 
+	 (i.e., can the approach always be used or are there certain limitations?).
+A: The characteristic is that the template is only used withthe specified type(in this case double).
+	 If some variable can be converted to the specified type, then it will always work.
+	 A limitation is when the compiler cannot convert a type to another type(e.g. a str::string to int).
+	

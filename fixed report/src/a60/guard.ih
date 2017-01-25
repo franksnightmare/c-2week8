@@ -1,0 +1,3 @@
+#include "guard.h"
+
+using namespace std;

@@ -1,0 +1,134 @@
+\documentclass[11pt]{article}
+
+\usepackage{times}
+\usepackage[english]{babel}
+
+% -----------------------------------------------
+% especially use this for you code
+% -----------------------------------------------
+
+\usepackage{courier}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{tabularx}
+\usepackage{graphicx}
+
+\definecolor{Gray}{gray}{0.95}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{language=C++,
+	basicstyle = \normalsize\ttfamily,   % the size and fonts that are used
+	tabsize = 2,                    % sets default tabsize
+	breaklines = true,              % sets automatic line breaking
+	keywordstyle=\color{blue}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	commentstyle=\color{mygreen}\ttfamily,
+	numbers=left,
+	keepspaces=true,
+	showspaces=false,
+	showstringspaces=false,
+}
+
+\begin{document}
+
+\title{Programming in C/C++ \\
+       Exercises set eight: function templates
+}
+\date{\today}
+\author{Christiaan Steenkist \\
+Jaime Betancor Valado \\
+Remco Bos \\
+}
+
+\maketitle
+\section*{Exercise 56, cast as}
+Let's be honest, static casts are a pain.
+We tried to alleviate this pain by shortening it to a simple as.
+
+\subsection*{Code listings}
+\lstinputlisting[caption = main.ih]{src/a56/main.ih}
+\lstinputlisting[caption = main.h]{src/a56/main.h}
+\lstinputlisting[caption = main.cc]{src/a56/main.cc}
+
+\section*{Exercise 57, code bloat away}
+Gee who would have thunked that the compiler is actually smart and combines two identical instances of a template function together into a single functino saving code space and preventing code bloat? I SURE would.
+
+\subsection*{Output}
+\begin{lstlisting}
+0x804873e
+0x804873e
+\end{lstlisting}
+
+\subsection*{Code listings}
+\lstinputlisting[caption = main.h]{src/a57/main.h}
+\lstinputlisting[caption = pointerunion.h]{src/a57/pointerunion.h}
+\lstinputlisting[caption = addtwo.h]{src/a57/addtwo.h}
+\lstinputlisting[caption = add1.cc]{src/a57/add1.cc}
+\lstinputlisting[caption = add2.cc]{src/a57/add2.cc}
+\lstinputlisting[caption = main.cc]{src/a57/main.cc}
+\section*{Exercise 58, function templates}
+We were tasked to modify the definition of operator overloading in exercise 36 using function templates.
+\subsection*{Code listings}
+\lstinputlisting[caption = exception.h]{src/a58/exception.h}
+\subsection*{Exercuse 60, GUARDS!}
+Whether you are using a mutex or a smaphore, this guard's got your back.
+
+\lstinputlisting[caption = main.ih]{src/a60/main.ih}
+\lstinputlisting[caption = main.h]{src/a60/main.h}
+\lstinputlisting[caption = main.cc]{src/a60/main.cc}
+
+\subsubsection*{Semaphore}
+\lstinputlisting[caption = main.ih]{src/a60/semaphore.ih}
+\lstinputlisting[caption = main.h]{src/a60/semaphore.h}
+\lstinputlisting[caption = mutexref.cc]{src/a60/mutexref.cc}
+
+\subsubsection*{Guard}
+\lstinputlisting[caption = guard.ih]{src/a60/guard.ih}
+\lstinputlisting[caption = guard.h]{src/a60/guard.h}
+\lstinputlisting[caption = constructor1.cc]{src/a60/guardconstr1.cc}
+\lstinputlisting[caption = constructor2.cc]{src/a60/guardconstr2.cc}
+\lstinputlisting[caption = paroperator.cc]{src/a60/paroperator.cc}
+
+\section*{Exercise 62, function selection}
+Here some questions and some answers, thats it.
+\subsubsection*{Question 1}
+Q: Why is the scope resolution operator required when calling max()?
+A: Because max is defined in the global namespace.
+
+\subsection*{Question 2}
+Q: When compiling this function the compiler complains with a message like:
+\begin{lstlisting}
+max.cc:13: error: no matching function for call to 'max(double, int)'
+\end{lstlisting}
+Why doesn't the compiler generate a max(double, double) function in this case? 
+
+A: The compiler first sees a double and decides that the typename Type must be double.
+The compiler will not promote the int to a double by itself, because it checks if the int is a double, which it isn't.
+
+\subsection*{Question 3}
+Q: Assume we add a function
+\begin{lstlisting}
+double max(double const &left, double const &right)
+\end{lstlisting}
+to the source. Explain why this solves the problem.
+
+A: The compiler does not have to check if both values are the same type (i.e. double in the previous question), so it can convert the int into a double. 
+
+\subsection*{Question 4}
+Q: Assume we would then call \texttt{::max('a', 12)}. Which \texttt{max()} function is then used and why?
+A: It will use the first one, the template. Because 'a' is a char and not a double.
+
+\subsection*{Question 5}
+Q: Remove the additional max function. Without using casts or otherwise changing the argument list of the function call \texttt{max(3.5, 4)}, how can we get the compiler to compile the source properly?
+A: Use this line: \texttt{cout << ::max<double>(3.5, 4) << endl;}
+
+\lstinputlisting[caption = main.cc]{src/a62/main.cc}
+
+\subsection*{Question 6}
+Q: Specify a general characteristic of the answer to the previous question (i.e., can the approach always be used or are there certain limitations?).
+A: The characteristic is that the template is only used withthe specified type(in this case double). If some variable can be converted to the specified type, then it will always work. A limitation is when the compiler cannot convert a type to another type(e.g. a str::string to int).
+
+\end{document}

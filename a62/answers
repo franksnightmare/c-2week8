@@ -1,5 +1,6 @@
 Q: Why is the scope resolution operator required when calling max()?
-A: Because max is defined in the global namespace.
+A: Otherwise the compiler thinks that the default max function template must be used, instead
+   of the self-defined max function template.
 ---------------------------------------------------------------------
 Q: When compiling this function the compiler complains with a message like:
 			 max.cc:13: error: no matching function for call to 'max(double, int)'  
@@ -11,12 +12,15 @@ A: The compiler first sees a double and decides that the typename Type must be d
 Q: Assume we add a function 
 			 double max(double const &left, double const &right)
 to the source. Explain why this solves the problem.
-A: The compiler does not have to check if both values are the same 
-	 type(i.e. double in the previous question), so it can convert 
-	 the int into a double. 
+A: To use the template version, the compiler needs to see that the arguments
+   provided to the max function have the same type and then use that type. Providing a function where the 
+   compiler already knows which types to use, it only needs to know if types provided are convertible to a double,
+   like all primitive types.
 -----------------------------------------------------------------------
 Q: Assume we would then call ::max('a', 12). Which max() function is then used and why?
-A: It will use the first one, the template. Because 'a' is a char and not a double.
+A: It will use the second one, because a char and an int are not the same type.
+   However a char and an int are primitive types, and can be converted to a double, so
+   the second function can be used.
 ----------------------------------------------------------------------
 Q: Remove the additional max function. Without using casts or otherwise 
 	 changing the argument list of the function call max(3.5, 4), 

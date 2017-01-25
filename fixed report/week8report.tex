@@ -90,13 +90,12 @@ Whether you are using a mutex or a smaphore, this guard's got your back.
 \lstinputlisting[caption = guard.h]{src/a60/guard.h}
 \lstinputlisting[caption = constructor1.cc]{src/a60/guardconstr1.cc}
 \lstinputlisting[caption = constructor2.cc]{src/a60/guardconstr2.cc}
-\lstinputlisting[caption = paroperator.cc]{src/a60/paroperator.cc}
 
 \section*{Exercise 62, function selection}
 Here some questions and some answers, thats it.
 \subsubsection*{Question 1}
 Q: Why is the scope resolution operator required when calling max()?
-A: Because max is defined in the global namespace.
+A: Otherwise the compiler thinks that the default max function template must be used, instead of the self-defined max function template.
 
 \subsection*{Question 2}
 Q: When compiling this function the compiler complains with a message like:
@@ -115,11 +114,11 @@ double max(double const &left, double const &right)
 \end{lstlisting}
 to the source. Explain why this solves the problem.
 
-A: The compiler does not have to check if both values are the same type (i.e. double in the previous question), so it can convert the int into a double. 
+A: To use the template version, the compiler needs to see that the arguments provided to the max function have the same type and then use that type. Providing a function where the compiler already knows which types to use, it only needs to know if types provided are convertible to a double, like all primitive types.
 
 \subsection*{Question 4}
 Q: Assume we would then call \texttt{::max('a', 12)}. Which \texttt{max()} function is then used and why?
-A: It will use the first one, the template. Because 'a' is a char and not a double.
+A: It will use the second one, because a char and an int are not the same type. However a char and an int are primitive types, and can be converted to a double, so the second function can be used.
 
 \subsection*{Question 5}
 Q: Remove the additional max function. Without using casts or otherwise changing the argument list of the function call \texttt{max(3.5, 4)}, how can we get the compiler to compile the source properly?
@@ -129,6 +128,6 @@ A: Use this line: \texttt{cout << ::max<double>(3.5, 4) << endl;}
 
 \subsection*{Question 6}
 Q: Specify a general characteristic of the answer to the previous question (i.e., can the approach always be used or are there certain limitations?).
-A: The characteristic is that the template is only used withthe specified type(in this case double). If some variable can be converted to the specified type, then it will always work. A limitation is when the compiler cannot convert a type to another type(e.g. a str::string to int).
+A: The characteristic is that the template is used when any primitive types is used. The compiler already knows it should use a double, so it can convert primitive types. However the solution of the previous question is limited to primitive types.
 
 \end{document}

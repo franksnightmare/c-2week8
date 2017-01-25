@@ -11,7 +11,13 @@ class Guard
 		Guard(std::mutex &someMutex);
 		Guard(Semaphore &semaphore);
 		
-		void operator()(void (*func)());
+		template <typename T>
+		void operator()(T func)
+		{
+			d_mutex.lock();
+			func();
+			d_mutex.unlock();
+		}
 };
 
 #endif

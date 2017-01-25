@@ -2,7 +2,13 @@
 #define MAIN_H
 
 template <typename T>
-T as(auto castVar)
+T as(auto const castVar)
+{
+	return static_cast<T>(castVar);
+}
+
+template <typename T>
+T as(auto const &&castVar)
 {
 	return static_cast<T>(castVar);
 }

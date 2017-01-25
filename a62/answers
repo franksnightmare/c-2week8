@@ -30,7 +30,7 @@ A: Use this line: cout << ::max<double>(3.5, 4) << endl;
 --------------------------------------------------------------------------
 Q: Specify a general characteristic of the answer to the previous question 
 	 (i.e., can the approach always be used or are there certain limitations?).
-A: The characteristic is that the template is only used withthe specified type(in this case double).
-	 If some variable can be converted to the specified type, then it will always work.
-	 A limitation is when the compiler cannot convert a type to another type(e.g. a str::string to int).
+A: The characteristic is that the template is used when any primitive types is 
+   used. The compiler already knows it should use a double, so it can convert 
+   primitive types. However the solution of the previous question is limited to primitive types.   
 	
